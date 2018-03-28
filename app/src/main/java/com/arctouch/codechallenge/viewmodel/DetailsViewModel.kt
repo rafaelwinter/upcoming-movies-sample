@@ -4,7 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import com.arctouch.codechallenge.CodeChallengeApplication
-import com.arctouch.codechallenge.api.TmdbApi
+import com.arctouch.codechallenge.model.api.TmdbApi
 import com.arctouch.codechallenge.extensions.backdropImageUrl
 import com.arctouch.codechallenge.extensions.genreNames
 import com.arctouch.codechallenge.extensions.posterImageUrl

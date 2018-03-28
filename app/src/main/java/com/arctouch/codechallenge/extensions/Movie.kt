@@ -1,6 +1,6 @@
 package com.arctouch.codechallenge.extensions
 
-import com.arctouch.codechallenge.api.TmdbApi
+import com.arctouch.codechallenge.model.api.TmdbApi
 import com.arctouch.codechallenge.model.Movie
 
 private const val POSTER_URL = "https://image.tmdb.org/t/p/w154"

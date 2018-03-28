@@ -5,8 +5,8 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.arctouch.codechallenge.CodeChallengeApplication
-import com.arctouch.codechallenge.api.TmdbApi
-import com.arctouch.codechallenge.data.Cache
+import com.arctouch.codechallenge.model.api.TmdbApi
+import com.arctouch.codechallenge.model.data.Cache
 import com.arctouch.codechallenge.model.Genre
 import com.arctouch.codechallenge.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -1,6 +1,6 @@
 package com.arctouch.codechallenge.dagger
 
-import com.arctouch.codechallenge.api.TmdbApi
+import com.arctouch.codechallenge.model.api.TmdbApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
