@@ -71,7 +71,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             pageCount = 0
         }
 
-        api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, page.toLong(), TmdbApi.DEFAULT_REGION)
+        api.upcomingMovies(page, TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, TmdbApi.DEFAULT_REGION)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
