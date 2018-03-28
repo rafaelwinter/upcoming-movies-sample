@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.api
+package com.arctouch.codechallenge.model.api
 
 import com.arctouch.codechallenge.model.GenreResponse
 import com.arctouch.codechallenge.model.Movie
@@ -13,28 +13,28 @@ interface TmdbApi {
     companion object {
         const val URL = "https://api.themoviedb.org/3/"
         const val API_KEY = "1f54bd990f1cdfb230adb312546d765d"
-        const val DEFAULT_LANGUAGE = "pt-BR"
-        const val DEFAULT_REGION = "BR"
+        const val DEFAULT_LANGUAGE = "en-US"
+        const val DEFAULT_REGION = "US"
     }
 
     @GET("genre/movie/list")
     fun genres(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE
     ): Observable<GenreResponse>
 
     @GET("movie/upcoming")
     fun upcomingMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Long,
-        @Query("region") region: String
+            @Query("page") page: Int,
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE,
+            @Query("region") region: String = DEFAULT_REGION
     ): Observable<UpcomingMoviesResponse>
 
     @GET("movie/{id}")
     fun movie(
-        @Path("id") id: Long,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+            @Path("id") id: Long,
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE
     ): Observable<Movie>
 }
