@@ -17,3 +17,9 @@ val Movie.posterImageUrl: String
  */
 val Movie.backdropImageUrl: String
     get() = BACKDROP_URL + posterPath + "?api_key=" + TmdbApi.API_KEY
+
+/**
+ * The names of the movie genres
+ */
+val Movie.genreNames: String
+    get() = genres?.joinToString(separator = ", ") { it.name } ?: ""
