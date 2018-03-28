@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.arctouch.codechallenge.api.TmdbApi
 import com.arctouch.codechallenge.data.Cache
+import com.arctouch.codechallenge.model.Genre
 import com.arctouch.codechallenge.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -56,6 +57,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
      * Load a page of upcoming movies and add the result to the movies list.
      */
     fun loadUpcomingMovies(page: Int = firstPage) {
+
+        // If the genres cache is empty, load it and retry fetching the upcoming movies
+        if (Cache.genres.isEmpty()) {
+            loadMovieGenres {
+                loadUpcomingMovies(page)
+            }
+
+            return
+        }
+
         if (page == firstPage) {
             pageCount = 0
         }
@@ -82,6 +93,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         allLoadedMovies.value = allMovies + moviesWithGenres
                         previousMovieCount.value = allMovies.count()
                     }
+                }
+    }
+
+    /**
+     * Load the movies genres. This is a pre-requisite to load movies
+     */
+    private fun loadMovieGenres(onLoaded: (List<Genre>) -> Unit) {
+        api.genres(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Cache.cacheGenres(it.genres)
+                    onLoaded(it.genres)
                 }
     }
 }
