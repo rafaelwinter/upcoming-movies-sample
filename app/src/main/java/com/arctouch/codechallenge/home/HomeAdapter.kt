@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arctouch.codechallenge.R
+import com.arctouch.codechallenge.extensions.posterImageUrl
 import com.arctouch.codechallenge.model.Movie
-import com.arctouch.codechallenge.util.MovieImageUrlBuilder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_item.view.*
@@ -15,15 +15,13 @@ class HomeAdapter(private val movies: List<Movie>, private val listener: (Movie)
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val movieImageUrlBuilder = MovieImageUrlBuilder()
-
         fun bind(movie: Movie,  listener: (Movie) -> Unit) = with(itemView) {
             titleTextView.text = movie.title
             genresTextView.text = movie.genres?.joinToString(separator = ", ") { it.name }
             releaseDateTextView.text = movie.releaseDate
 
             Glide.with(this)
-                .load(movie.posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
+                .load(movie.posterImageUrl)
                 .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
                 .into(posterImageView)
 

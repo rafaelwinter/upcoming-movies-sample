@@ -3,9 +3,9 @@ package com.arctouch.codechallenge.details
 import android.os.Bundle
 import android.util.Log
 import com.arctouch.codechallenge.R
-import com.arctouch.codechallenge.api.TmdbApi
 import com.arctouch.codechallenge.base.BaseActivity
-import com.arctouch.codechallenge.util.MovieImageUrlBuilder
+import com.arctouch.codechallenge.extensions.backdropImageUrl
+import com.arctouch.codechallenge.extensions.posterImageUrl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.details_activity.*
 
 class DetailsActivity : BaseActivity() {
     private val logTag = "DetailsActivity"
-    private val movieImageUrlBuilder = MovieImageUrlBuilder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,25 +42,29 @@ class DetailsActivity : BaseActivity() {
                         releaseDateTextView.text = it.releaseDate ?: ""
                         overviewTextView.text = it.overview ?: ""
 
-                        loadBackdropImage(it.backdropPath)
+                        loadBackdropImage(it.backdropImageUrl)
 
-                        loadPosterImage(it.posterPath)
+                        loadPosterImage(it.posterImageUrl)
                     }
                 }
     }
 
-    private fun loadPosterImage(posterPath: String?) {
-        Glide.with(rootScrollView)
-                .load(posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
-                .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                .into(posterImageView)
+    private fun loadPosterImage(posterUrl: String?) {
+        posterUrl?.let {
+            Glide.with(rootScrollView)
+                    .load(it)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
+                    .into(posterImageView)
+        }
     }
 
-    private fun loadBackdropImage(backdropPath: String?) {
-        Glide.with(rootScrollView)
-                .load(backdropPath?.let { movieImageUrlBuilder.buildBackdropUrl(it) })
-                .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                .into(backdropImageView)
+    private fun loadBackdropImage(backdropUrl: String?) {
+        backdropUrl?.let {
+            Glide.with(rootScrollView)
+                    .load(it)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
+                    .into(backdropImageView)
+        }
     }
 
     companion object {
