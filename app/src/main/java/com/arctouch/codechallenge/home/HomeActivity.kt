@@ -1,21 +1,19 @@
 package com.arctouch.codechallenge.home
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import com.arctouch.codechallenge.R
-import com.arctouch.codechallenge.api.TmdbApi
-import com.arctouch.codechallenge.base.BaseActivity
-import com.arctouch.codechallenge.data.Cache
-import com.arctouch.codechallenge.details.DetailsActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.home_activity.*
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.view.View
+import com.arctouch.codechallenge.R
+import com.arctouch.codechallenge.details.DetailsActivity
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.util.NextPageScrollListener
+import com.arctouch.codechallenge.viewmodel.HomeViewModel
+import kotlinx.android.synthetic.main.home_activity.*
 
 
 /**
@@ -23,23 +21,23 @@ import com.arctouch.codechallenge.util.NextPageScrollListener
  *
  * Selecting a movie from the list will open the Movie Details screen.
  */
-class HomeActivity : BaseActivity() {
+class HomeActivity : AppCompatActivity() {
     private val logTag = "HomeActivity"
 
     /**
-     * A mutable list that holds all movies loaded on the Recycler View.
+     * The Home view model.
      */
-    private val movieList: MutableList<Movie> = mutableListOf()
-
-    /**
-     * The total of pages of the currently loaded movie query.
-     */
-    private var pageCount = 0
+    private val viewModel by lazy { ViewModelProviders.of(this).get(HomeViewModel::class.java) }
 
     /**
      * A scroll listener that loads automatically the next page.
      */
     private var scrollListener: NextPageScrollListener? = null
+
+    /**
+     * A mutable list that holds all movies loaded on the home adapter.
+     */
+    private val movieList: MutableList<Movie> = mutableListOf()
 
     /**
      * The adapter of the home Recycler View
@@ -60,43 +58,33 @@ class HomeActivity : BaseActivity() {
 
         scrollListener = object : NextPageScrollListener(linearLayoutManager) {
             override fun onFetchNextPage(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                if (page > pageCount) {
-                    return
-                }
-
-                loadUpcomingMoviesPage(page)
+                viewModel.loadUpcomingMovies(page)
             }
         }
 
         recyclerView.addOnScrollListener(scrollListener)
 
-        // Trigger manually the loading method for the first page.
-        loadUpcomingMoviesPage(1)
-    }
+        viewModel.apply {
 
-    /**
-     * Load a page of upcoming movies and add the result to the movies list.
-     */
-    private fun loadUpcomingMoviesPage(page: Int) {
-        api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, page.toLong(), TmdbApi.DEFAULT_REGION)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Log.d(logTag, "Finished loading page ${it.page} of ${it.totalPages} (with ${it.totalResults} movies)")
-
-                    pageCount = it.totalPages
-
-                    val moviesWithGenres = it.results.map { movie ->
-                        movie.copy(genres = Cache.genres.filter { movie.genreIds?.contains(it.id) == true })
-                    }
-
-                    val previousCount = movieList.count()
-                    val newCount = previousCount + moviesWithGenres.count()
-
-                    movieList.addAll(moviesWithGenres)
-                    homeAdapter.notifyItemRangeInserted(previousCount, newCount - 1)
-
+            // Load new movies to the list
+            currentMovies.observe(this@HomeActivity, Observer<List<Movie>> {
+                it?.let {
+                    movieList.addAll(it)
                     progressBar.visibility = View.GONE
                 }
+            })
+
+            // Notify the home adapter that new items were loaded
+            previousMovieCount.observe(this@HomeActivity, Observer<Int> {
+                it?.let {
+                    val movieCount = viewModel.allLoadedMovies.value?.count() ?: 0
+
+                    homeAdapter.notifyItemRangeInserted(it, movieCount - 1)
+                }
+            })
+
+            // Start loading upcoming movies
+            loadUpcomingMovies()
+        }
     }
 }
