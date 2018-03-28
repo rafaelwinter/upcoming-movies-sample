@@ -33,7 +33,7 @@ class DetailsActivity : BaseActivity() {
             return
         }
 
-        api.movie(movieId, TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
+        api.movie(movieId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {

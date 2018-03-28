@@ -71,7 +71,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             pageCount = 0
         }
 
-        api.upcomingMovies(page, TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, TmdbApi.DEFAULT_REGION)
+        api.upcomingMovies(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -100,7 +100,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
      * Load the movies genres. This is a pre-requisite to load movies
      */
     private fun loadMovieGenres(onLoaded: (List<Genre>) -> Unit) {
-        api.genres(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
+        api.genres()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {

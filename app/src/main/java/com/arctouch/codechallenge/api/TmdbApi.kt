@@ -19,22 +19,22 @@ interface TmdbApi {
 
     @GET("genre/movie/list")
     fun genres(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE
     ): Observable<GenreResponse>
 
     @GET("movie/upcoming")
     fun upcomingMovies(
             @Query("page") page: Int,
-            @Query("api_key") apiKey: String,
-            @Query("language") language: String,
-            @Query("region") region: String
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE,
+            @Query("region") region: String = DEFAULT_REGION
     ): Observable<UpcomingMoviesResponse>
 
     @GET("movie/{id}")
     fun movie(
-        @Path("id") id: Long,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+            @Path("id") id: Long,
+            @Query("api_key") apiKey: String = API_KEY,
+            @Query("language") language: String = DEFAULT_LANGUAGE
     ): Observable<Movie>
 }
