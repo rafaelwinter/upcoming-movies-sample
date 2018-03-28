@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.home
+package com.arctouch.codechallenge.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -9,9 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.arctouch.codechallenge.R
-import com.arctouch.codechallenge.details.DetailsActivity
 import com.arctouch.codechallenge.model.Movie
-import com.arctouch.codechallenge.util.NextPageScrollListener
 import com.arctouch.codechallenge.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.home_activity.*
 

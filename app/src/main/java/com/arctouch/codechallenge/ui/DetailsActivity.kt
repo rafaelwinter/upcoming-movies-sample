@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.details
+package com.arctouch.codechallenge.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders

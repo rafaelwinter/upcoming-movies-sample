@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.util
+package com.arctouch.codechallenge.ui
 
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
